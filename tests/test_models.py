@@ -198,3 +198,10 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(found.count(), count)
         for product in found:
             self.assertEqual(product.category, category)
+    
+    def test_deserialize_invalid_available(self):
+        data = {"name": "Cool Product", "description": "A cool product", "price": "10.99", "available": "ok", "category": "CLOTHS"}
+        with self.assertRaises(DataValidationError) as error:
+            product = Product()
+            product.deserialize(data)
+        self.assertIn("Invalid type for boolean [available]: <class 'str'>", str(error.exception))
